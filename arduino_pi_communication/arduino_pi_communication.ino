@@ -5,6 +5,15 @@ void setup() {
   pinMode(12, OUTPUT);
   pinMode(16, OUTPUT);
   pinMode(17, OUTPUT);
+  for(int postivePin = 0; postivePin < 16; postivePin++){
+    int physicalPin = positivePinToPhysicalPin(postivePin);
+    pinMode(physicalPin, OUTPUT);  
+  }
+  for(int negativePin = 0; negativePin < 32; negativePin++){
+    int physicalPin = negativePinToPhysicalPin(negativePin);
+    pinMode(physicalPin, OUTPUT); 
+  }
+
   setAllLights(false);
   Serial.begin(57600);
 }
@@ -21,8 +30,8 @@ String checkIfNewInstruction(){
 }
 
 void setAllLights(bool onOrOff){
-  for(int postivePin = 0; postivePin < 32; postivePin++){
-    for(int negativePin = 0; negativePin < 16; negativePin++){
+  for(int postivePin = 0; postivePin < 16; postivePin++){
+    for(int negativePin = 0; negativePin < 32; negativePin++){
       setLight(postivePin, negativePin, onOrOff); 
     }
   }
@@ -38,13 +47,13 @@ int logicalPinToPhysicalPin(int logicalPin){
 }
 
 int positivePinToPhysicalPin(int positivePin){
-  // Positive pins are pins 16-47
-  return logicalPinToPhysicalPin(positivePin + 16);
+  // Positive pins are pins 0-15
+  return logicalPinToPhysicalPin(positivePin);
 }
 
 int negativePinToPhysicalPin(int negativePin){
-  // Negative pins are pins 0-15
-  return logicalPinToPhysicalPin(negativePin);
+  // Negative pins are pins 16-47
+  return logicalPinToPhysicalPin(negativePin + 16); 
 }
 
 void setLight(int postivePin, int negativePin, bool on){
